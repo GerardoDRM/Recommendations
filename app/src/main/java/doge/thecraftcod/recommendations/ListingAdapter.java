@@ -55,6 +55,15 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
         listingHolder.priceView.setText(listing.price);
         listingHolder.shopNameView.setText(listing.Shop.shop_name);
 
+        listingHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openListing = new Intent(Intent.ACTION_VIEW);
+                openListing.setData(Uri.parse(listing.url));
+                activity.startActivity(openListing);
+            }
+        });
+
         if(isGooglePlayAvailable) {
             listingHolder.plusOneButton.setVisibility(View.VISIBLE);
             listingHolder.plusOneButton.initialize(listing.url, REQUEST_CODE_PLUS_ONE);
@@ -83,7 +92,6 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
                     i.putExtra(Intent.EXTRA_TEXT, "Checkout this item on Etsy " + listing.title + " " + listing.url);
                     i.setType("text/plain");
                     activity.startActivityForResult(Intent.createChooser(i,"Share"), REQUEST_CODE_SHARE);
-
                 }
             });
         }
