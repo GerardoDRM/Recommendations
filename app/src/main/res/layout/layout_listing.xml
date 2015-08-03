@@ -19,7 +19,7 @@
             android:layout_toLeftOf="@+id/listing_share_btn"
             android:layout_toStartOf="@+id/listing_share_btn"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/listing_share_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"

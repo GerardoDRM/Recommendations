@@ -109,7 +109,11 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        googleServicesHelper.handleActivityResult(requestCode,resultCode,data);
+        googleServicesHelper.handleActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == ListingAdapter.REQUEST_CODE_PLUS_ONE) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void showLoading() {
