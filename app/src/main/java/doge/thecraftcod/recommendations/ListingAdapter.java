@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import doge.thecraftcod.recommendations.api.Etsy;
+import doge.thecraftcod.recommendations.google.GoogleServicesHelper;
 import doge.thecraftcod.recommendations.model.ActiveListings;
 import doge.thecraftcod.recommendations.model.Listing;
 import retrofit.Callback;
@@ -19,15 +21,18 @@ import retrofit.client.Response;
  * Created by gerardo on 2/08/15.
  */
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder>
-implements Callback<ActiveListings>{
+implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener{
 
     private MainActivity activity;
     private LayoutInflater inflater;
     private ActiveListings activeListings;
 
+    private boolean isGooglePlayAvailable;
+
     public ListingAdapter(MainActivity activity) {
         this.activity = activity;
         inflater = LayoutInflater.from(activity);
+        this.isGooglePlayAvailable = false;
     }
 
     @Override
@@ -41,6 +46,13 @@ implements Callback<ActiveListings>{
         listingHolder.titleView.setText(listing.title);
         listingHolder.priceView.setText(listing.price);
         listingHolder.shopNameView.setText(listing.Shop.shop_name);
+
+        if(isGooglePlayAvailable) {
+
+        }
+        else {
+
+        }
 
         Picasso.with(listingHolder.imageView.getContext())
                 .load(listing.Images[0].url_570xN)
@@ -71,6 +83,26 @@ implements Callback<ActiveListings>{
 
     public ActiveListings getActiveListings() {
         return activeListings;
+    }
+
+    @Override
+    public void onConnected() {
+        if(getItemCount() == 0) {
+            Etsy.getActiveListings(this);
+        }
+        isGooglePlayAvailable = true;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDisconnected() {
+
+        if(getItemCount() == 0) {
+            Etsy.getActiveListings(this);
+        }
+
+        isGooglePlayAvailable = false;
+        notifyDataSetChanged();
     }
 
     public class ListingHolder extends RecyclerView.ViewHolder {

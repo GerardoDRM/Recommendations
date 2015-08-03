@@ -1,17 +1,17 @@
 package doge.thecraftcod.recommendations;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import doge.thecraftcod.recommendations.api.Etsy;
+import doge.thecraftcod.recommendations.google.GoogleServicesHelper;
 import doge.thecraftcod.recommendations.model.ActiveListings;
 
 
@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
     private RecyclerView recyclerView;
     private View progressBar;
     private TextView errorView;
+
+    private GoogleServicesHelper googleServicesHelper;
 
     private ListingAdapter adapter;
 
@@ -39,25 +41,19 @@ public class MainActivity extends ActionBarActivity {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
         adapter = new ListingAdapter(this);
 
-        Log.d("List",adapter.getItemCount() + "");
 
         recyclerView.setAdapter(adapter);
 
-        if (savedInstanceState == null) {
-            showLoading();
-            Etsy.getActiveListings(adapter);
-            Log.d("NULL", "Esto es null");
-        }
-        else {
+        googleServicesHelper = new GoogleServicesHelper(this, adapter);
+
+
+        showLoading();
+
+
+        if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_ACTIVE_LISTINGS)) {
                 adapter.success((ActiveListings) savedInstanceState.getParcelable(STATE_ACTIVE_LISTINGS), null);
                 showList();
-                Log.d("INSTANCE", "Esto SHOWlist");
-            }
-            else {
-                showLoading();
-                Etsy.getActiveListings(adapter);
-                Log.d("INSTANCE", "Esto es SHOWloading");
             }
 
         }
@@ -96,6 +92,24 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleServicesHelper.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleServicesHelper.disconnect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        googleServicesHelper.handleActivityResult(requestCode,resultCode,data);
     }
 
     public void showLoading() {

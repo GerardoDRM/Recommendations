@@ -3,10 +3,35 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/listing_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/listing_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.gms.plus.PlusOneButton
+            android:id="@+id/listing_plus_one_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_align_Top="@+id/listing_share_btn"
+            android:layout_toLeftOf="@+id/listing_share_btn"
+            android:layout_toStartOf="@+id/listing_share_btn"/>
+
+        <ImageView
+            android:id="@+id/listing_share_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/ic_social_share"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
